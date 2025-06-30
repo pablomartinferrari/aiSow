@@ -1,0 +1,6 @@
+@AiSow.ProjectManagementService_HostAddress = http://localhost:5159
+
+GET {{AiSow.ProjectManagementService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
