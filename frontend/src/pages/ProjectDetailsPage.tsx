@@ -1,17 +1,21 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Project } from "../components/dashboard/ProjectList";
+import { useQuery } from "@tanstack/react-query";
+import { getProject, Project } from "../services/projectService";
 import UploadPage from "./UploadPage";
-
-// For now, we'll mock the project data. In a real app, you'd fetch this from state or an API.
-const mockProjects: Project[] = [];
 
 const ProjectDetailsPage: React.FC = () => {
     const { projectId } = useParams<{ projectId: string }>();
     const navigate = useNavigate();
-    const project = mockProjects.find((p) => p.id === projectId);
 
-    if (!project) {
+    const { data: project, isLoading, error } = useQuery<Project>({
+        queryKey: ["project", projectId],
+        queryFn: () => getProject(projectId!),
+        enabled: !!projectId,
+    });
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error || !project) {
         return (
             <div>
                 <h2>Project not found</h2>

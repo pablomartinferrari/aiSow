@@ -1,0 +1,52 @@
+# Node (frontend)
+node_modules/
+dist/
+.env
+.env.*
+
+# Vite
+.vite/
+
+# VSCode
+.vscode/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# .NET (backend)
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+
+# ASP.NET secrets
+secrets.json
+
+# Docker
+**/.docker/
+**/docker-compose.override.yml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PostgreSQL/SQLite/DB files
+pgdata/
+*.db
+*.db*
+*.sqlite
+*.sqlite3
+*.s3db
+*.shm
+*.wal
+
+# Misc
+*.log

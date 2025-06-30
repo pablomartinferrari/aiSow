@@ -1,0 +1,32 @@
+services:
+  aisow.projectmanagementservice:
+    image: ${DOCKER_REGISTRY-}aisowprojectmanagementservice
+    build:
+      context: backend/apps/services/AiSow.ProjectManagementService
+      dockerfile: Dockerfile
+    ports:
+      - "5000:8080"
+    depends_on:
+      - db
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: aisow
+      POSTGRES_USER: aisowuser
+      POSTGRES_PASSWORD: aisowpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@aisow.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+volumes:
+  pgdata:
