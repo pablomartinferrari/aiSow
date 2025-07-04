@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Project } from "./ProjectList";
+import { Box, TextField, Button, Typography, Paper } from '@mui/material';
 
 interface NewProjectFormProps {
     onCreate: (project: Omit<Project, 'id'>) => void;
@@ -18,28 +19,33 @@ const NewProjectForm: React.FC<NewProjectFormProps> = ({ onCreate }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{ marginTop: "2rem" }}>
-            <h3>Create New Project</h3>
-            <div>
-                <input
-                    type="text"
-                    placeholder="Project name"
+        <Paper elevation={2} sx={{ mt: 4, p: 3, maxWidth: 500 }}>
+            <form onSubmit={handleSubmit}>
+                <Typography variant="h6" gutterBottom>Create New Project</Typography>
+                <TextField
+                    label="Project name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
-                    style={{ padding: "0.5rem", width: "100%", marginBottom: "0.5rem" }}
+                    fullWidth
+                    margin="normal"
                 />
-            </div>
-            <div>
-                <textarea
-                    placeholder="Project description"
+                <TextField
+                    label="Project description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    style={{ padding: "0.5rem", width: "100%", minHeight: "60px" }}
+                    fullWidth
+                    margin="normal"
+                    multiline
+                    minRows={3}
                 />
-            </div>
-            <button type="submit" style={{ marginTop: "0.5rem" }}>Create Project</button>
-        </form>
+                <Box mt={2}>
+                    <Button type="submit" variant="contained" color="primary">
+                        Create Project
+                    </Button>
+                </Box>
+            </form>
+        </Paper>
     );
 };
 

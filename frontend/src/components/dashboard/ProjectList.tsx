@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Table, TableHead, TableRow, TableCell, TableBody, Typography, Box, Paper } from '@mui/material';
 
 export type Project = {
     id: string;
@@ -12,60 +13,40 @@ interface ProjectListProps {
     onSelect: (project: Project) => void;
 }
 
-
-
-const tableStyle: React.CSSProperties = {
-    width: '100%',
-    borderCollapse: 'collapse',
-    marginTop: '1.5rem',
-};
-
-const thStyle: React.CSSProperties = {
-    textAlign: 'left',
-    padding: '0.75rem 0.5rem',
-    borderBottom: '2px solid #eee',
-    fontWeight: 600,
-    fontSize: '1.05em',
-};
-
-const tdStyle: React.CSSProperties = {
-    padding: '0.75rem 0.5rem',
-    borderBottom: '1px solid #f0f0f0',
-    verticalAlign: 'top',
-};
-
 const ProjectList: React.FC<ProjectListProps> = ({ projects, onSelect }) => (
-    <div>
-        <h2>Your Projects</h2>
+    <Box mt={3}>
+        <Typography variant="h5" gutterBottom>Your Projects</Typography>
         {projects.length === 0 ? (
-            <p>No projects found.</p>
+            <Typography color="text.secondary">No projects found.</Typography>
         ) : (
-            <table style={tableStyle}>
-                <thead>
-                    <tr>
-                        <th style={thStyle}>Project Name</th>
-                        <th style={thStyle}>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {projects.map((project) => (
-                        <tr key={project.id}>
-                            <td style={tdStyle}>
-                                <Link
-                                    to={`/projects/${project.id}`}
-                                    style={{ color: '#232946', fontWeight: 600, textDecoration: 'underline', cursor: 'pointer' }}
-                                    onClick={() => onSelect(project)}
-                                >
-                                    {project.name}
-                                </Link>
-                            </td>
-                            <td style={tdStyle}>{project.description}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <Paper elevation={2}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell sx={{ fontWeight: 600 }}>Project Name</TableCell>
+                            <TableCell sx={{ fontWeight: 600 }}>Description</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {projects.map((project) => (
+                            <TableRow key={project.id} hover>
+                                <TableCell>
+                                    <Link
+                                        to={`/projects/${project.id}`}
+                                        style={{ color: '#232946', fontWeight: 600, textDecoration: 'underline', cursor: 'pointer' }}
+                                        onClick={() => onSelect(project)}
+                                    >
+                                        {project.name}
+                                    </Link>
+                                </TableCell>
+                                <TableCell>{project.description}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </Paper>
         )}
-    </div>
+    </Box>
 );
 
 export default ProjectList;
