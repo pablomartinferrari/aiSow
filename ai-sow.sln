@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{13
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AiSow.ProjectManagementService", "backend\apps\services\AiSow.ProjectManagementService\AiSow.ProjectManagementService.csproj", "{23C6F435-7F5A-216F-C222-20B04E4BABB6}"
 EndProject
+
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
 Global
@@ -22,6 +23,7 @@ Global
 		{23C6F435-7F5A-216F-C222-20B04E4BABB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23C6F435-7F5A-216F-C222-20B04E4BABB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23C6F435-7F5A-216F-C222-20B04E4BABB6}.Release|Any CPU.Build.0 = Release|Any CPU
+
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -34,6 +36,7 @@ Global
 		{2BC02DC1-2124-658C-D15A-0C732D976599} = {1AE8ACA6-933B-BF2A-3671-3E2EAC007D16}
 		{13806AB1-C708-CB90-A867-66B645B824CC} = {2BC02DC1-2124-658C-D15A-0C732D976599}
 		{23C6F435-7F5A-216F-C222-20B04E4BABB6} = {13806AB1-C708-CB90-A867-66B645B824CC}
+
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B713C60-3C24-4441-9EDE-0DACE35B42CF}
