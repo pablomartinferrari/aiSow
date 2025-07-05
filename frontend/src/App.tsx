@@ -5,6 +5,8 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { theme } from "./theme";
 import MainLayout from "./layouts/MainLayout";
 import DashboardPage from "./pages/DashboardPage";
+import ProjectsPage from "./pages/ProjectsPage";
+import ProjectDetailsPage from "./pages/ProjectDetailsPage";
 import SettingsPage from "./pages/SettingsPage";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/routing/ProtectedRoute";
@@ -23,6 +25,22 @@ const App: React.FC = () => (
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/projects"
+            element={
+              <ProtectedRoute>
+                <ProjectsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/projects/:id"
+            element={
+              <ProtectedRoute>
+                <ProjectDetailsPage />
               </ProtectedRoute>
             }
           />

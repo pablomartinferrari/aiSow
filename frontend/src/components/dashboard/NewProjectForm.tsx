@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Project } from "./ProjectList";
-import { Box, TextField, Button, Typography, Paper } from '@mui/material';
+import { Box, TextField, Button, Typography } from '@mui/material';
 
 interface NewProjectFormProps {
     onCreate: (project: Omit<Project, 'id'>) => void;
@@ -19,33 +19,32 @@ const NewProjectForm: React.FC<NewProjectFormProps> = ({ onCreate }) => {
     };
 
     return (
-        <Paper elevation={2} sx={{ mt: 4, p: 3, maxWidth: 500 }}>
-            <form onSubmit={handleSubmit}>
-                <Typography variant="h6" gutterBottom>Create New Project</Typography>
-                <TextField
-                    label="Project name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    label="Project description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    fullWidth
-                    margin="normal"
-                    multiline
-                    minRows={3}
-                />
-                <Box mt={2}>
-                    <Button type="submit" variant="contained" color="primary">
-                        Create Project
-                    </Button>
-                </Box>
-            </form>
-        </Paper>
+        <Box component="form" onSubmit={handleSubmit} sx={{ pt: 1 }}>
+            <TextField
+                label="Project name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                fullWidth
+                margin="normal"
+                autoFocus
+            />
+            <TextField
+                label="Project description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                fullWidth
+                margin="normal"
+                multiline
+                minRows={3}
+                maxRows={6}
+            />
+            <Box mt={3} display="flex" justifyContent="flex-end">
+                <Button type="submit" variant="contained" color="primary">
+                    Create Project
+                </Button>
+            </Box>
+        </Box>
     );
 };
 

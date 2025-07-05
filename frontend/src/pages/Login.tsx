@@ -91,7 +91,7 @@ const Login: React.FC = () => {
             }
 
             // Navigate to dashboard or the intended destination
-            const from = location.state?.from?.pathname || '/';
+            const from = location.state?.from?.pathname || '/projects';
             navigate(from, { replace: true });
         } catch (err: any) {
             // Handle different types of errors
