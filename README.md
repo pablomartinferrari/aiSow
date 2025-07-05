@@ -18,11 +18,25 @@
 
 ## 🧰 Tech Stack
 
-- **Backend**: Python (FastAPI), OpenCV, Tesseract, PyMuPDF
-- **AI/ML**: GPT-4 / Claude, OCR models, RAG + Embeddings
-- **Frontend**: React / Next.js / Streamlit
-- **Storage**: AWS S3 or Azure Blob
+- **Backend**: .NET Core (Project Management Service), Python (FastAPI - OCR Service)
+- **AI/ML**: GPT-4 / Claude, EasyOCR, RAG + Embeddings
+- **Frontend**: React / TypeScript / Vite
+- **Storage**: SQL Server (Entity Framework), AWS S3 or Azure Blob
 - **Export**: PDF, Word, SVG
+
+## 🔧 Services
+
+### Project Management Service (.NET Core)
+- User authentication and authorization
+- Project CRUD operations
+- Document management
+- RESTful API endpoints
+
+### OCR Service (Python/FastAPI)
+- **Current functionality**: PDF to image conversion using PyMuPDF
+- **Planned extensions**: Text extraction with EasyOCR, multi-language support, table extraction
+- **API endpoints**: `/api/v1/process-pdf`, `/api/v1/process-image`, `/api/v1/health`
+- **Docker support**: Containerized deployment ready
 
 ---
 
