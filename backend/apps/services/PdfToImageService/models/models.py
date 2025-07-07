@@ -9,7 +9,7 @@ class BBox(BaseModel):
     height: int
 
 
-class OcrItem(BaseModel):
+class Pdf2ImageItem(BaseModel):
     text: str
     confidence: float
     bbox: BBox
@@ -18,13 +18,13 @@ class OcrItem(BaseModel):
 
 class PageResult(BaseModel):
     page_number: int
-    items: List[OcrItem]
+    items: List[Pdf2ImageItem]
     tables: List[Dict[str, Any]] = []
     images: List[str] = []
 
 
-class OcrResponse(BaseModel):
+class Pdf2ImageResponse(BaseModel):
     filename: str
-    pages: List[PageResult]
+    image_paths: List[str]
     processing_time: Dict[str, float]
     status: str
