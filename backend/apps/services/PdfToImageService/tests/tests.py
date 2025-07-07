@@ -60,13 +60,13 @@ def main():
     print()
 
     # Test 2: PDF processing (if PDF exists)
-    pdf_path = "test_document.pdf"
+    pdf_path = "test_plan.pdf"
     if os.path.exists(pdf_path):
         print("2. Testing PDF to image conversion...")
         pdf_ok = test_pdf_processing(pdf_path)
         print()
     else:
-        print("2. Skipping PDF test (no test_document.pdf found)")
+        print("2. Skipping PDF test (no test_plan.pdf found)")
         pdf_ok = True
         print()
 

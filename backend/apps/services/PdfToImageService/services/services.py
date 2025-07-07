@@ -63,7 +63,7 @@ class PdfToImageService:
                 page_to_image_start = time.time()
                 images = convert_from_bytes(
                     file_content,
-                    dpi=200,
+                    dpi=600,
                     first_page=page_idx + 1,
                     last_page=page_idx + 1,
                 )
