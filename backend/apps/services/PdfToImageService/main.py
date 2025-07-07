@@ -2,15 +2,15 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from routes import router
+from routes.routes import router
 
 
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application"""
     app = FastAPI(
-        title="AI SOW OCR Service",
+        title="AI SOW Pdf2Image Service",
         version="1.0.0",
-        description="OCR service for extracting text from PDFs and images using EasyOCR",
+        description="Pdf2Image service for converting PDFs to images.",
     )
 
     # Configure CORS

@@ -1,8 +1,8 @@
 from typing import List
-from models import OcrItem, BBox
+from models.models import Pdf2ImageItem, BBox
 
 
-def format_easyocr_result(results, confidence_threshold=0.80) -> List[OcrItem]:
+def format_easyocr_result(results, confidence_threshold=0.80) -> List[Pdf2ImageItem]:
     """
     Convert EasyOCR results to structured OcrItem objects
 
@@ -23,7 +23,7 @@ def format_easyocr_result(results, confidence_threshold=0.80) -> List[OcrItem]:
         height = max(y_coords) - y
 
         formatted.append(
-            OcrItem(
+            Pdf2ImageItem(
                 text=text,
                 confidence=round(confidence, 4),
                 bbox=BBox(

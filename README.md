@@ -18,7 +18,7 @@
 
 ## 🧰 Tech Stack
 
-- **Backend**: .NET Core (Project Management Service), Python (FastAPI - OCR Service)
+- **Backend**: .NET Core (Project Management Service), Python (FastAPI - Pdf2Image Service)
 - **AI/ML**: GPT-4 / Claude, EasyOCR, RAG + Embeddings
 - **Frontend**: React / TypeScript / Vite
 - **Storage**: SQL Server (Entity Framework), AWS S3 or Azure Blob
@@ -32,7 +32,7 @@
 - Document management
 - RESTful API endpoints
 
-### OCR Service (Python/FastAPI)
+### Pdf2Image Service (Python/FastAPI)
 - **Current functionality**: PDF to image conversion using PyMuPDF
 - **Planned extensions**: Text extraction with EasyOCR, multi-language support, table extraction
 - **API endpoints**: `/api/v1/process-pdf`, `/api/v1/process-image`, `/api/v1/health`

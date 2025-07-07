@@ -7,55 +7,45 @@ import numpy as np
 from typing import List, Optional
 from fastapi import HTTPException
 
-from models import PageResult, OcrResponse
-from utils import format_easyocr_result
+from models.models import Pdf2ImageResponse
 
 
-class OcrService:
-    """Core OCR processing service"""
-
-    def __init__(self, reader):
-        self.reader = reader
+class PdfToImageService:
+    """Service for converting PDF files to images"""
 
     async def process_pdf(
         self,
         file_content: bytes,
         filename: str,
-        language: str = "en",
-        extract_tables: bool = False,
-        extract_images: bool = False,
         page_number: Optional[int] = None,
-    ) -> OcrResponse:
+    ) -> Pdf2ImageResponse:
         """
-        Process PDF file and extract text using OCR
+        Convert PDF file to images and save them to disk.
 
         Args:
             file_content: PDF file content as bytes
             filename: Original filename
-            language: Language code for OCR
-            extract_tables: Whether to extract tables (not implemented)
-            extract_images: Whether to extract images (not implemented)
             page_number: Specific page to process (None for all pages)
 
         Returns:
-            OcrResponse with extracted text and metadata
+            dict with image file paths and metadata
         """
         start_time = time.time()
 
         try:
-            # Convert PDF to images using pdf2image
-            pdf_to_image_time = time.time()
-            images = convert_from_bytes(
-                file_content, dpi=200
-            )  # 200 DPI for good quality
-            pdf_to_image_time = time.time() - pdf_to_image_time
+            from PyPDF2 import PdfReader
+            from io import BytesIO
+
+            # Get total pages using PyPDF2 (lightweight)
+            pdf = PdfReader(BytesIO(file_content))
+            total_pages = len(pdf.pages)
 
             # Create output folder for images if it doesn't exist
             images_folder = "images"
             os.makedirs(images_folder, exist_ok=True)
 
-            pages = []
-            total_pages = len(images)
+            image_paths = []
+            pdf_to_image_time = 0
 
             # Determine which pages to process
             if page_number is not None:
@@ -68,11 +58,17 @@ class OcrService:
             else:
                 pages_to_process = range(total_pages)
 
-            ocr_time = 0
-
             for page_idx in pages_to_process:
-                # Get the page image
-                img = images[page_idx]
+                # Convert single page to image
+                page_to_image_start = time.time()
+                images = convert_from_bytes(
+                    file_content,
+                    dpi=200,
+                    first_page=page_idx + 1,
+                    last_page=page_idx + 1,
+                )
+                img = images[0]  # We only converted one page
+                pdf_to_image_time += time.time() - page_to_image_start
 
                 # Save the image to disk
                 image_filename = (
@@ -80,33 +76,16 @@ class OcrService:
                 )
                 image_path = os.path.join(images_folder, image_filename)
                 img.save(image_path, "PNG")
-
-                img_array = np.array(img)
-
-                # Perform OCR
-                ocr_start_time = time.time()
-                results = self.reader.readtext(img_array)
-                ocr_time += time.time() - ocr_start_time
-
-                # Create page result with saved image path
-                page_result = PageResult(
-                    page_number=page_idx + 1,
-                    items=format_easyocr_result(results),
-                    tables=[],  # TODO: Implement table extraction
-                    images=[image_path],  # store image file path
-                )
-
-                pages.append(page_result)
+                image_paths.append(image_path)
 
             total_time = time.time() - start_time
 
-            return OcrResponse(
+            return Pdf2ImageResponse(
                 filename=filename,
-                pages=pages,
+                image_paths=image_paths,
                 processing_time={
                     "total_seconds": total_time,
                     "pdf_to_image_seconds": pdf_to_image_time,
-                    "ocr_seconds": ocr_time,
                 },
                 status="Completed",
             )
@@ -121,7 +100,7 @@ class OcrService:
         file_content: bytes,
         filename: str,
         language: str = "en",
-    ) -> OcrResponse:
+    ) -> Pdf2ImageResponse:
         """
         Process image file and extract text using OCR
 
@@ -131,7 +110,7 @@ class OcrService:
             language: Language code for OCR
 
         Returns:
-            OcrResponse with extracted text and metadata
+            Pdf2ImageResponse with extracted text and metadata
         """
         start_time = time.time()
 
@@ -154,7 +133,7 @@ class OcrService:
 
             total_time = time.time() - start_time
 
-            return OcrResponse(
+            return Pdf2ImageResponse(
                 filename=filename,
                 pages=[
                     PageResult(

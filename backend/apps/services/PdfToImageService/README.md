@@ -1,6 +1,6 @@
-# AI SOW OCR Service
+# AI SOW Pdf2Image Service
 
-A Python-based OCR service using FastAPI and EasyOCR for processing PDFs and images to extract text.
+A Python-based Pdf2Image service using FastAPI for converting PDFs to images (and optionally extracting text).
 
 ## Features
 

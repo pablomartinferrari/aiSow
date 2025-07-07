@@ -2,24 +2,21 @@ import time
 from fastapi import APIRouter, File, UploadFile, Form, HTTPException
 from typing import Optional
 
-from models import OcrResponse
-from services import OcrService
+from models.models import Pdf2ImageResponse
+from services.services import PdfToImageService
 
 router = APIRouter()
 
 
-def get_ocr_service() -> OcrService:
-    """Get OCR service instance - this would typically come from dependency injection"""
-    import easyocr
-
-    reader = easyocr.Reader(["en"], gpu=False)
-    return OcrService(reader)
+def get_pdf_to_image_service() -> PdfToImageService:
+    """Get PDF to Image service instance - this would typically come from dependency injection"""
+    return PdfToImageService()
 
 
 @router.get("/health")
 async def health_check():
     """Health check endpoint"""
-    return {"status": "OCR Service is running", "timestamp": time.time()}
+    return {"status": "Pdf2Image Service is running", "timestamp": time.time()}
 
 
 @router.get("/languages")
@@ -40,7 +37,7 @@ async def get_supported_languages():
     return languages
 
 
-@router.post("/process-pdf", response_model=OcrResponse)
+@router.post("/process-pdf", response_model=Pdf2ImageResponse)
 async def process_pdf(
     file: UploadFile = File(...),
     language: str = Form("en"),
@@ -48,20 +45,17 @@ async def process_pdf(
     extract_images: bool = Form(False),
     page_number: Optional[int] = Form(None),
 ):
-    """Process PDF file and extract text using OCR"""
+    """Process PDF file and convert to images"""
     if not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=400, detail="File must be a PDF")
 
     try:
         file_content = await file.read()
-        ocr_service = get_ocr_service()
+        pdf_to_image_service = get_pdf_to_image_service()
 
-        return await ocr_service.process_pdf(
+        return await pdf_to_image_service.process_pdf(
             file_content=file_content,
             filename=file.filename,
-            language=language,
-            extract_tables=extract_tables,
-            extract_images=extract_images,
             page_number=page_number,
         )
     except HTTPException:
@@ -70,7 +64,7 @@ async def process_pdf(
         raise HTTPException(status_code=500, detail=f"Error processing PDF: {str(e)}")
 
 
-@router.post("/process-image", response_model=OcrResponse)
+@router.post("/process-image", response_model=Pdf2ImageResponse)
 async def process_image(file: UploadFile = File(...), language: str = Form("en")):
     """Process image file and extract text using OCR"""
     allowed_types = ["image/jpeg", "image/jpg", "image/png", "image/tiff", "image/bmp"]
@@ -81,9 +75,9 @@ async def process_image(file: UploadFile = File(...), language: str = Form("en")
 
     try:
         file_content = await file.read()
-        ocr_service = get_ocr_service()
+        pdf_to_image_service = get_pdf_to_image_service()
 
-        return await ocr_service.process_image(
+        return await pdf_to_image_service.process_image(
             file_content=file_content,
             filename=file.filename,
             language=language,

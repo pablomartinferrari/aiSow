@@ -125,5 +125,5 @@ dmypy.json
 
 # Logs
 *.log
-/backend/apps/services/OcrService/venv311
+/backend/apps/services/PdfToImageService/venv311
 *.pdf
