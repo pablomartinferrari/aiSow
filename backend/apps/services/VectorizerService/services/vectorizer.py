@@ -1,13 +1,12 @@
 import fitz  # PyMuPDF
 from typing import List, Dict, Any, Optional
-from models.models import (
+from apps.models.models import (
     VectorizedPDFResponse,
     Line,
     TextElement,
     PathElement,
     ScaleInfo,
 )
-from neo4j import GraphDatabase
 import re
 
 
@@ -32,16 +31,7 @@ class VectorizerService:
                 return full_line
         return None
 
-    def __init__(
-        self,
-        neo4j_uri: str = "bolt://localhost:7687",
-        neo4j_user: str = "neo4j",
-        neo4j_password: str = "strongpassword123",
-    ):
-        self.driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
-
-    def close(self):
-        self.driver.close()
+    # Neo4j logic removed; this service is now stateless and only extracts data.
 
     def is_vector_pdf(self, doc: fitz.Document) -> bool:
         for page in doc:
@@ -238,67 +228,8 @@ class VectorizerService:
 
         return None
 
-    def store_vector_data(
-        self,
-        project_id: str,
-        lines: List[Line],
-        texts: List[TextElement],
-        paths: List[PathElement],
-        scale: Optional[ScaleInfo],
-    ):
-        with self.driver.session() as session:
-            session.run(
-                "MERGE (p:Project {id: $project_id})",
-                project_id=project_id,
-            )
-            # for line in lines:
-            #     session.run(
-            #         """
-            #         MATCH (p:Project {id: $project_id})
-            #         CREATE (l:Line {start: $start, end: $end})
-            #         MERGE (p)-[:HAS_LINE]->(l)
-            #         """,
-            #         project_id=project_id,
-            #         start=line.start,
-            #         end=line.end,
-            #     )
-            for text in texts:
-                session.run(
-                    """
-                    MATCH (p:Project {id: $project_id})
-                    CREATE (t:TextElement {text: $text, position: $position, font_size: $font_size, bbox: $bbox})
-                    MERGE (p)-[:HAS_TEXT]->(t)
-                    """,
-                    project_id=project_id,
-                    text=text.text,
-                    position=text.position,
-                    font_size=text.font_size,
-                    bbox=text.bbox,
-                )
-            for path in paths:
-                session.run(
-                    """
-                    MATCH (p:Project {id: $project_id})
-                    CREATE (pa:PathElement {points: $points})
-                    MERGE (p)-[:HAS_PATH]->(pa)
-                    """,
-                    project_id=project_id,
-                    points=path.points,
-                )
-            if scale:
-                session.run(
-                    """
-                    MATCH (p:Project {id: $project_id})
-                    MERGE (s:ScaleInfo {units: $units, ratio: $ratio})
-                    MERGE (p)-[:HAS_SCALE]->(s)
-                    """,
-                    project_id=project_id,
-                    units=scale.units,
-                    ratio=scale.ratio,
-                )
-
-    def vectorize_pdf(self, pdf_bytes: bytes, project_id: str) -> VectorizedPDFResponse:
-        from models.models import PageScaleInfo, ScaleInfo
+    def vectorize_pdf(self, pdf_bytes: bytes) -> VectorizedPDFResponse:
+        from apps.models.models import PageScaleInfo, ScaleInfo
 
         doc = fitz.open(stream=pdf_bytes, filetype="pdf")
         if not self.is_vector_pdf(doc):
@@ -316,70 +247,7 @@ class VectorizerService:
                 page_scales.append(PageScaleInfo(page=i, scale=scale, nts=False))
             else:
                 page_scales.append(PageScaleInfo(page=i, scale=None, nts=True))
-        # Store all vector data (lines, texts, paths) for the project
-        self.store_vector_data(
-            project_id=project_id,
-            lines=lines,
-            texts=texts,
-            paths=paths,
-            scale=None,  # Not storing a single scale at project level
-        )
-
-        # Try proximity-based scale detection for NTS pages
-        for i, page_scale in enumerate(page_scales):
-            if page_scale.nts:  # If no scale was found via text extraction
-                print(
-                    f"[DEBUG] Trying proximity-based scale detection for page {page_scale.page}"
-                )
-                proximity_scale = self.find_scale_by_proximity(
-                    project_id, page_scale.page
-                )
-                if proximity_scale:
-                    print(
-                        f"[DEBUG] Found scale via proximity for page {page_scale.page}: {proximity_scale}"
-                    )
-                    page_scales[i] = PageScaleInfo(
-                        page=page_scale.page, scale=proximity_scale, nts=False
-                    )
-
-        # Store all scales in Neo4j (per page)
-        with self.driver.session() as session:
-            session.run(
-                "MERGE (p:Project {id: $project_id})",
-                project_id=project_id,
-            )
-            for page_scale in page_scales:
-                print(
-                    f"Storing page {page_scale.page} scale: nts={page_scale.nts}, scale={page_scale.scale}"
-                )
-                session.run(
-                    """
-                    MATCH (p:Project {id: $project_id})
-                    MERGE (pg:Page {number: $page})
-                    MERGE (p)-[:HAS_PAGE]->(pg)
-                    """,
-                    project_id=project_id,
-                    page=page_scale.page,
-                )
-                if not page_scale.nts and page_scale.scale:
-                    print(
-                        f"  -> Creating ScaleInfo for page {page_scale.page}: units={page_scale.scale.units}, ratio={page_scale.scale.ratio}"
-                    )
-                    session.run(
-                        """
-                        MATCH (p:Project {id: $project_id})-[:HAS_PAGE]->(pg:Page {number: $page})
-                        MERGE (s:ScaleInfo {units: $units, ratio: $ratio})
-                        MERGE (pg)-[:HAS_SCALE]->(s)
-                        """,
-                        project_id=project_id,
-                        page=page_scale.page,
-                        units=page_scale.scale.units,
-                        ratio=page_scale.scale.ratio,
-                    )
-                else:
-                    print(
-                        f"  -> No scale stored for page {page_scale.page} (NTS or missing scale)"
-                    )
+        # No storage: just return the extracted data
         return VectorizedPDFResponse(
             lines=lines, texts=texts, paths=paths, scales=page_scales, fallback=False
         )
