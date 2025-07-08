@@ -8,7 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apps", "apps", "{2BC02DC1-2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{13806AB1-C708-CB90-A867-66B645B824CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AiSow.ProjectManagementService", "backend\apps\services\AiSow.ProjectManagementService\AiSow.ProjectManagementService.csproj", "{23C6F435-7F5A-216F-C222-20B04E4BABB6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AiSow.ProjectManagementService", "backend\apps\api\AiSow.ProjectManagementService\AiSow.ProjectManagementService.csproj", "{23C6F435-7F5A-216F-C222-20B04E4BABB6}"
 EndProject
 
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
