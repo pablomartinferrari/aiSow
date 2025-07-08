@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+neo4j
+requests
+numpy
+pydantic

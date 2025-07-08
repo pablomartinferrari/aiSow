@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ProjectList, { Project } from "../components/dashboard/ProjectList";
-import NewProjectForm from "../components/dashboard/NewProjectForm";
+import ProjectList, { Project } from "../components/project/ProjectList";
+import NewProjectForm from "../components/project/NewProjectForm";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchProjects, createProject } from "../services/projectService";
 import {

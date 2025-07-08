@@ -3,11 +3,6 @@ import { Link } from "react-router-dom";
 
 const navItems = [
     { path: "/dashboard", label: "Dashboard" },
-    { path: "/upload", label: "Upload" },
-    { path: "/plan-viewer", label: "Plan Viewer" },
-    { path: "/sow", label: "SOW" },
-    { path: "/validation", label: "Validation" },
-    { path: "/integrations", label: "Integrations" },
     { path: "/settings", label: "Settings" },
 ];
 

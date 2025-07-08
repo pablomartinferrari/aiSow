@@ -11,6 +11,7 @@ import {
     Container
 } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
+import ProjectChatbot from "../components/project/ProjectChatbot";
 
 const ProjectDetailsPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -68,6 +69,10 @@ const ProjectDetailsPage: React.FC = () => {
                     Upload Files
                 </Typography>
                 <UploadPage />
+                <Typography variant="h5" gutterBottom>
+                    Ask about this project
+                </Typography>
+                <ProjectChatbot projectId={project.id} />
             </Box>
         </Container>
     );
