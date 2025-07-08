@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Project } from "./ProjectList";
 import { Box, TextField, Button, Typography } from '@mui/material';
+import { Project } from "./ProjectList";
 
 interface NewProjectFormProps {
     onCreate: (project: Omit<Project, 'id'>) => void;
