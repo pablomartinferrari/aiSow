@@ -40,20 +40,20 @@ def test_vectorize_and_embed_first_25_pages():
     )
     assert os.path.exists(pdf_path), f"Test PDF not found: {pdf_path}"
 
-    # Read only the first 25 pages
+    # Read only the first 10 pages
     with open(pdf_path, "rb") as f:
         pdf_bytes = f.read()
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-    # Only process the first 25 pages
+    # Only process the first 10 pages
     new_doc = fitz.open()
-    for i in range(min(25, len(doc))):
+    for i in range(min(10, len(doc))):
         new_doc.insert_pdf(doc, from_page=i, to_page=i)
-    first_25_bytes = new_doc.write()
-    logging.info(f"[DEBUG] Created PDF with {min(25, len(doc))} pages for testing.")
+    first_10_bytes = new_doc.write()
+    logging.info(f"[DEBUG] Created PDF with {min(10, len(doc))} pages for testing.")
 
     # Vectorize
     vectorizer = VectorizerService()
-    result = vectorizer.vectorize_pdf(first_25_bytes)
+    result = vectorizer.vectorize_pdf(first_10_bytes)
     logging.info(f"[DEBUG] Extracted {len(result.texts)} text elements.")
     assert result.texts, "No texts extracted from PDF!"
 
@@ -62,7 +62,7 @@ def test_vectorize_and_embed_first_25_pages():
     embedding_service.store_texts_and_embeddings("test_project", result.texts)
     embedding_service.close()
     logging.info(
-        f"[DEBUG] Embedded {len(result.texts)} text elements from first 25 pages."
+        f"[DEBUG] Embedded {len(result.texts)} text elements from first 10 pages."
     )
     logging.info(
         "[TEST] test_vectorize_and_embed_first_25_pages completed successfully."

@@ -1,3 +1,5 @@
 fastapi
 uvicorn
-pymupdf
+neo4j
+requests
+pydantic

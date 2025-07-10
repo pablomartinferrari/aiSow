@@ -1,25 +1,33 @@
-from fastapi import APIRouter, File, UploadFile, HTTPException, Form
+from fastapi import APIRouter, UploadFile, File, HTTPException
 from services.vectorizer import VectorizerService
-from models.models import VectorizedPDFResponse
+import os
+import tempfile
 
 router = APIRouter()
 vectorizer_service = VectorizerService()
 
 
-@router.post("/vectorize")
-async def vectorize_pdf(
-    file: UploadFile = File(...),
-    project_id: str = Form(...),
-):
-    if not file.filename.lower().endswith(".pdf"):
-        raise HTTPException(status_code=400, detail="File must be a PDF.")
+@router.post("/vectorize-images")
+async def vectorize_images(files: list[UploadFile] = File(...)):
+    """
+    Accepts multiple image files, runs OCR and layout grouping, and returns JSON results.
+    """
+    temp_paths = []
     try:
-        pdf_bytes = await file.read()
-        result = vectorizer_service.vectorize_pdf(pdf_bytes, project_id)
-        # Convert to dict, remove any legacy 'scale' key, and return as response model
-        result_dict = result.dict() if hasattr(result, "dict") else dict(result)
-        if "scale" in result_dict:
-            result_dict.pop("scale")
-        return result_dict
+        for file in files:
+            suffix = os.path.splitext(file.filename)[-1]
+            with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+                tmp.write(await file.read())
+                temp_paths.append(tmp.name)
+        result = vectorizer_service.vectorize_images(temp_paths)
+        return result
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Vectorization failed: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Image vectorization failed: {str(e)}"
+        )
+    finally:
+        for path in temp_paths:
+            try:
+                os.remove(path)
+            except Exception:
+                pass

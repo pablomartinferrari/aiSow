@@ -127,3 +127,13 @@ dmypy.json
 *.log
 /backend/apps/services/PdfToImageService/venv311
 *.pdf
+/backend/apps/services/ClusteringService/images
+/backend/apps/services/ClusteringService/imgs
+/backend/apps/services/ClusteringService/output
+/backend/apps/services/ClusteringService/ocr_cache.json
+/backend/apps/services/ClusteringService/ocr_output.json
+/backend/apps/services/ClusteringService/output.json
+/backend/apps/services/ClusteringService/output_pdf.json
+/backend/apps/services/ClusteringService/output_pdf.md
+/backend/apps/services/OcrService/tests/images
+/backend/apps/services/VectorizerService/tests/images
