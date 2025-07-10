@@ -36,3 +36,20 @@ class VectorizedPDFResponse(BaseModel):
     paths: List[PathElement]
     scales: List[PageScaleInfo]
     fallback: Optional[bool] = False
+
+
+class BoundingBox(BaseModel):
+    x: int
+    y: int
+    width: int
+    height: int
+
+
+class OCRTextItem(BaseModel):
+    text: str
+    bounding_box: BoundingBox
+    confidence: float
+
+
+class OCRResponse(BaseModel):
+    results: List[OCRTextItem]
